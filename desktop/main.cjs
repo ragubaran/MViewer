@@ -5,11 +5,22 @@ const fs = require('fs');
 let mainWindow = null;
 
 function createWindow() {
+  const iconPath = path.join(__dirname, '../public/icon.png');
+
+  if (process.platform === 'darwin' && app.dock) {
+    try {
+      app.dock.setIcon(iconPath);
+    } catch (err) {
+      console.warn('Could not set dock icon:', err);
+    }
+  }
+
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 900,
     minWidth: 900,
     minHeight: 650,
+    icon: iconPath,
     title: 'MViewer - Markdown PDF Form Viewer & Editor',
     webPreferences: {
       nodeIntegration: false,
