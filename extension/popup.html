@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MViewer Quick Hub</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      width: 320px;
+      background-color: #0b0f19;
+      color: #f8fafc;
+      padding: 16px;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #1e293b;
+    }
+    .logo {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+    }
+    .title {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.2px;
+      color: #ffffff;
+    }
+    .subtitle {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+    .badges {
+      display: flex;
+      gap: 6px;
+      margin: 12px 0;
+    }
+    .badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: rgba(56, 189, 248, 0.1);
+      color: #38bdf8;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+    }
+    .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .btn {
+      width: 100%;
+      padding: 9px 12px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      border: none;
+      transition: all 0.15s ease;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    }
+    .btn-secondary {
+      background: #1e293b;
+      color: #e2e8f0;
+      border: 1px solid #334155;
+    }
+    .btn-secondary:hover {
+      background: #334155;
+      color: #ffffff;
+    }
+    .footer {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 10px;
+      color: #64748b;
+      border-top: 1px solid #1e293b;
+      padding-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="icons/icon-48.png" alt="MViewer Logo" class="logo" />
+    <div>
+      <h1 class="title">MViewer</h1>
+      <p class="subtitle">Markdown PDF Form Engine</p>
+    </div>
+  </div>
+
+  <div class="badges">
+    <span class="badge">🛡️ SHA-256 Sealed</span>
+    <span class="badge">⚡ 95% LLM Faster</span>
+  </div>
+
+  <div class="actions">
+    <button id="openFullTab" class="btn btn-primary">
+      🚀 Open MViewer Workspace
+    </button>
+    <button id="openSidePanel" class="btn btn-secondary">
+      📑 Open in Browser Side Panel
+    </button>
+  </div>
+
+  <div class="footer">
+    Works with local .md, .form.md & Web
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

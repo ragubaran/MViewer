@@ -38,13 +38,14 @@
   - Token and latency benchmark comparison vs PDF Vision OCR
   - Copy-paste prompts formatted for Gemini, Claude, or ChatGPT
   - AI Autofill Simulator (paste freeform notes/emails to auto-fill form fields)
-- 🎨 **Typeform-Grade Visual Field Creator**:
-  - Modal with 15+ field types and visual customization
-  - 1-click token insertion directly at cursor position
-  - 1-click **"Seal Template (SHA-256)"** generator
-- 🖥️ **Web & Desktop Support**:
-  - **Web**: Modern browser interface with File System Access API and PDF printing.
-  - **Desktop**: Electron native application with system menu, native dialogs, and offline mode.
+- 🎨 **Visual Builder & Markdown Text Dual Mode**:
+  - **Visual Builder**: No-code drag/reorder question cards, inline question label editing, choice chips, and required toggles.
+  - **Markdown Source**: Raw markdown and YAML frontmatter code editor for power users.
+  - **Split Preview**: Real-time side-by-side live rendered PDF paper sheet updating as you type.
+- 🧩 **Triple Deployment (Shared UI Across Web, Desktop & Chrome Extension)**:
+  - **Web**: Modern browser application with File System Access API.
+  - **Desktop**: Native Electron application with window menu and dock icon.
+  - **Chrome Extension (Manifest V3)**: Extension submodule with popup hub, browser side-panel integration, and full-page workspace sharing 100% of the UI components.
 - ⚡ **Bun 1.4 Native Performance**: Ultra-fast startup, sub-second production builds, and instantaneous unit tests with `bun test`.
 
 ---
@@ -63,24 +64,35 @@ cd /Users/ragu/Code/MViewer
 bun install
 ```
 
-### Running on the Web
+### 1. Running on the Web
 ```bash
 bun dev
 ```
 Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-### Running as a Native Desktop App
+### 2. Running as a Native Desktop App
 ```bash
 bun desktop
 ```
 
-### Running Unit Tests
+### 3. Building & Loading the Chrome Extension
+```bash
+bun run build:extension
+```
+**To install the extension in Google Chrome:**
+1. Open Chrome and go to `chrome://extensions`
+2. Enable **Developer mode** (toggle in the top-right corner)
+3. Click **Load unpacked**
+4. Select the directory: `/Users/ragu/Code/MViewer/extension/dist`
+5. Click the MViewer icon in your extensions toolbar to open the quick popup, side panel, or full workspace!
+
+### 4. Running Unit Tests
 ```bash
 bun test
 ```
-All 13 unit tests run in **~30ms** using Bun's built-in test runner.
+All 15 unit tests run in **~35ms** using Bun's built-in test runner.
 
-### Production Build
+### 5. Production Web Build
 ```bash
 bun run build
 ```
