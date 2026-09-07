@@ -167,15 +167,15 @@ export const PdfPaperViewer: React.FC<PdfPaperViewerProps> = ({
   }, [doc.templateBody, doc.formData, highlightFields, onFieldValueChange]);
 
   return (
-    <div className="w-full flex flex-col items-center py-6 px-4 select-text">
+    <div className="w-full flex flex-col items-center py-4 px-2 sm:px-4 select-text max-w-full overflow-x-auto">
       {/* Zoom Container */}
       <div
-        className="transition-transform duration-100 origin-top"
+        className="transition-transform duration-100 origin-top max-w-full"
         style={{ transform: `scale(${zoom})`, transformOrigin: 'top center' }}
       >
         {/* PDF Paper Sheet */}
         <div
-          className={`pdf-sheet w-[820px] min-h-[1120px] bg-white rounded-sm shadow-2xl p-12 relative flex flex-col border border-slate-200/80 ${
+          className={`pdf-sheet w-[820px] max-w-full min-h-[1120px] bg-white rounded-sm shadow-2xl p-4 sm:p-8 md:p-12 relative flex flex-col border border-slate-200/80 ${
             highlightFields ? 'highlight-fields' : ''
           }`}
           style={{ '--pdf-print-margin': `${printMarginMm}mm` } as React.CSSProperties}

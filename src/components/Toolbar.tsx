@@ -18,6 +18,7 @@ import {
   RotateCcw,
   Layers,
   ChevronDown,
+  ExternalLink,
 } from 'lucide-react';
 
 interface ToolbarProps {
@@ -63,63 +64,71 @@ export const Toolbar: React.FC<ToolbarProps> = ({
 }) => {
   const isVerified = doc.verification.status === 'verified';
   const isTampered = doc.verification.status === 'tampered';
+  const isChromeExtension = typeof window !== 'undefined' && (
+    window.location.protocol.startsWith('chrome-extension:') ||
+    window.location.href.includes('chrome-extension://')
+  );
 
   return (
     <header className="no-print w-full bg-slate-950 border-b border-slate-800 text-slate-200 select-none z-30 sticky top-0 shadow-md">
       {/* Top Bar */}
-      <div className="h-14 px-4 flex items-center justify-between gap-3">
+      <div className="min-h-14 py-1.5 px-3 flex flex-wrap sm:flex-nowrap items-center justify-between gap-2 overflow-hidden">
         {/* Left: Brand & Document Name */}
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink-0">
           <a
-            href="/"
+            href={isChromeExtension ? "https://mdpdfviewer.netlify.app/" : "/"}
+            target={isChromeExtension ? "_blank" : undefined}
+            rel={isChromeExtension ? "noopener noreferrer" : undefined}
             onClick={(e) => {
-              if (onOpenLanding) {
+              if (!isChromeExtension && onOpenLanding) {
                 e.preventDefault();
                 onOpenLanding();
               }
             }}
-            title="Open MDViewer Landing Page & Demo"
-            className="flex items-center gap-2.5 group transition-all"
+            title={isChromeExtension ? "About MDViewer (https://mdpdfviewer.netlify.app/)" : "Open MDViewer Landing Page & Demo"}
+            className="flex items-center gap-2 group transition-all shrink-0"
           >
-            <MvLogo size={34} className="shrink-0 shadow-md shadow-blue-500/25 rounded-xl transition-transform group-hover:scale-105" />
-            <div className="flex flex-col">
-              <span className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5 group-hover:text-blue-400 transition-colors">
+            <MvLogo size={30} className="shrink-0 shadow-md shadow-blue-500/25 rounded-lg transition-transform group-hover:scale-105" />
+            <div className="flex flex-col min-w-0">
+              <span className="font-bold text-xs sm:text-sm tracking-tight text-white flex items-center gap-1.5 group-hover:text-blue-400 transition-colors">
                 MDViewer
-                <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 font-mono font-normal">
+                <span className="text-[9px] sm:text-[10px] px-1 py-0.1 rounded bg-slate-800 text-slate-400 font-mono font-normal hidden xs:inline">
                   v0.1.0
                 </span>
               </span>
-              <span className="text-[11px] text-slate-400 truncate max-w-[200px]">
+              <span className="text-[10px] sm:text-[11px] text-slate-400 truncate max-w-[100px] xs:max-w-[140px] sm:max-w-[180px]">
                 {doc.metadata.title || 'Untitled Form Document'}
               </span>
             </div>
           </a>
 
-          <div className="h-5 w-[1px] bg-slate-800 hidden sm:block" />
+          <div className="h-5 w-[1px] bg-slate-800 hidden sm:block shrink-0" />
 
           {/* Mode Switcher: Fill & View (Locked) vs Template Designer */}
-          <div className="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800">
+          <div className="flex bg-slate-900 p-0.5 rounded-lg border border-slate-800 shrink-0">
             <button
               onClick={() => onModeChange('fill')}
-              className={`px-3 py-1 text-xs font-semibold rounded-md flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-2 sm:px-3 py-1 text-xs font-semibold rounded-md flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer ${
                 mode === 'fill'
                   ? 'bg-blue-600 text-white shadow-xs'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <Play className="w-3 h-3" />
-              <span>Fill Mode (Locked PDF)</span>
+              <Play className="w-3 h-3 shrink-0" />
+              <span className="hidden md:inline">Fill Mode (Locked PDF)</span>
+              <span className="md:hidden">Fill</span>
             </button>
             <button
               onClick={() => onModeChange('designer')}
-              className={`px-3 py-1 text-xs font-semibold rounded-md flex items-center gap-1.5 transition-all cursor-pointer ${
+              className={`px-2 sm:px-3 py-1 text-xs font-semibold rounded-md flex items-center gap-1 sm:gap-1.5 transition-all cursor-pointer ${
                 mode === 'designer'
                   ? 'bg-indigo-600 text-white shadow-xs'
                   : 'text-slate-400 hover:text-white'
               }`}
             >
-              <PenTool className="w-3 h-3" />
-              <span>Template Designer</span>
+              <PenTool className="w-3 h-3 shrink-0" />
+              <span className="hidden md:inline">Template Designer</span>
+              <span className="md:hidden">Designer</span>
             </button>
           </div>
         </div>
@@ -235,6 +244,18 @@ export const Toolbar: React.FC<ToolbarProps> = ({
               </button>
             </div>
           </div>
+
+          {/* External About Link (Netlify landing) */}
+          <a
+            href="https://mdpdfviewer.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 border border-slate-800 rounded-lg text-xs font-medium text-slate-300 flex items-center gap-1.5 hover:text-white transition-colors no-underline"
+            title="About MDViewer (https://mdpdfviewer.netlify.app/)"
+          >
+            <span>About</span>
+            <ExternalLink className="w-3 h-3 text-slate-400" />
+          </a>
 
           {/* Reset / Clear */}
           <Button variant="outline" size="sm" onClick={onResetFields} title="Clear all filled answers">

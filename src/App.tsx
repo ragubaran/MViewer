@@ -11,14 +11,24 @@ import { SecurityModal } from './components/SecurityModal';
 import { LandingPage } from './components/landing/LandingPage';
 import confetti from 'canvas-confetti';
 
+const isChromeExtension = typeof window !== 'undefined' && (
+  window.location.protocol.startsWith('chrome-extension:') ||
+  window.location.href.includes('chrome-extension://')
+);
+
 export function App() {
   const [viewMode, setViewMode] = useState<'app' | 'landing'>(() => {
+    if (isChromeExtension) return 'app';
     const path = window.location.pathname.toLowerCase();
     return path.includes('/mdviewer') ? 'app' : 'landing';
   });
 
   useEffect(() => {
     const handlePopState = () => {
+      if (isChromeExtension) {
+        setViewMode('app');
+        return;
+      }
       const path = window.location.pathname.toLowerCase();
       setViewMode(path.includes('/mdviewer') ? 'app' : 'landing');
     };
