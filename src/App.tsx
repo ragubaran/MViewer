@@ -15,6 +15,7 @@ export function App() {
   const [mode, setMode] = useState<'fill' | 'designer'>('fill');
   const [zoom, setZoom] = useState<number>(1.0);
   const [highlightFields, setHighlightFields] = useState<boolean>(true);
+  const [printMarginMm, setPrintMarginMm] = useState<number>(50);
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
   const [isLlmModalOpen, setIsLlmModalOpen] = useState(false);
   const [originalTemplateBackup, setOriginalTemplateBackup] = useState<string>('');
@@ -180,7 +181,7 @@ export function App() {
       <div className="h-screen w-screen bg-slate-950 flex items-center justify-center text-slate-400">
         <div className="flex items-center gap-3">
           <div className="w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-          <span className="text-sm font-medium">Loading MViewer Document...</span>
+          <span className="text-sm font-medium">Loading MDViewer Document...</span>
         </div>
       </div>
     );
@@ -209,6 +210,8 @@ export function App() {
         onOpenFile={handleOpenFile}
         onSaveFile={handleSaveFile}
         onPrintPdf={handlePrintPdf}
+        printMarginMm={printMarginMm}
+        onPrintMarginChange={setPrintMarginMm}
         onResetFields={handleResetFields}
         onSelectSampleTemplate={handleSelectSample}
       />
@@ -223,6 +226,7 @@ export function App() {
               highlightFields={highlightFields}
               zoom={zoom}
               onOpenSecurityModal={() => setIsSecurityModalOpen(true)}
+              printMarginMm={printMarginMm}
             />
           </div>
         ) : (

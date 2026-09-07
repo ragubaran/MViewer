@@ -112,7 +112,7 @@ export const SignaturePadModal: React.FC<SignaturePadModalProps> = ({
       // Add small cryptographic timestamp watermark below signature
       ctx.font = '9px monospace';
       ctx.fillStyle = '#64748b';
-      const timeStr = `MVIEWER SECURE ATTESTATION | ${new Date().toISOString()}`;
+      const timeStr = `MDVIEWER SECURE ATTESTATION | ${new Date().toISOString()}`;
       ctx.fillText(timeStr, canvas.width / 2, canvas.height - 14);
 
       const dataUrl = canvas.toDataURL('image/png');
@@ -127,7 +127,7 @@ export const SignaturePadModal: React.FC<SignaturePadModalProps> = ({
         // Watermark timestamp
         ctx.font = '9px monospace';
         ctx.fillStyle = '#64748b';
-        const timeStr = `MVIEWER ATTESTATION | ${new Date().toISOString()}`;
+        const timeStr = `MDVIEWER ATTESTATION | ${new Date().toISOString()}`;
         ctx.fillText(timeStr, 20, canvas.height - 12);
       }
       const dataUrl = canvas.toDataURL('image/png');
@@ -239,7 +239,7 @@ export const SignaturePadModal: React.FC<SignaturePadModalProps> = ({
                 </p>
                 <div className="absolute bottom-3 left-6 right-6 border-b border-slate-200" />
                 <span className="absolute bottom-1 right-3 text-[10px] text-slate-400 font-mono">
-                  VERIFIED BY MVIEWER
+                  VERIFIED BY MDVIEWER
                 </span>
               </div>
             </div>

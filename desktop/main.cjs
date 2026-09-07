@@ -21,7 +21,7 @@ function createWindow() {
     minWidth: 900,
     minHeight: 650,
     icon: iconPath,
-    title: 'MViewer - Markdown PDF Form Viewer & Editor',
+    title: 'MDViewer - Markdown PDF Form Viewer & Editor',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -50,7 +50,7 @@ function createWindow() {
   // Create native application menu
   const template = [
     {
-      label: 'MViewer',
+      label: 'MDViewer',
       submenu: [
         { role: 'about' },
         { type: 'separator' },

@@ -95,7 +95,7 @@
     box-shadow: none !important;
     border: none !important;
     margin: 0 !important;
-    padding: 20mm !important;
+    padding: var(--pdf-print-margin, 50mm) !important;
     width: 100% !important;
     max-width: none !important;
     min-height: auto !important;

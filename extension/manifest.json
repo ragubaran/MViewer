@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "MViewer - Tamper-Proof Markdown PDF Form Viewer",
-  "version": "1.0.0",
+  "name": "MDViewer - Tamper-Proof Markdown PDF Form Viewer",
+  "version": "0.1.0",
   "description": "Treat Markdown as secure PDF AcroForms with cryptographic SHA-256 template sealing, Typeform-style interactive fields, and 95% faster LLM data extraction.",
   "icons": {
     "16": "icons/icon-16.png",
@@ -15,7 +15,7 @@
       "128": "icons/icon-128.png"
     },
     "default_popup": "popup.html",
-    "default_title": "Open MViewer Form Engine"
+    "default_title": "Open MDViewer Form Engine"
   },
   "side_panel": {
     "default_path": "index.html"

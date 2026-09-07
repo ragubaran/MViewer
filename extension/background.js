@@ -1,7 +1,7 @@
-// MViewer Chrome Extension Background Service Worker
+// MDViewer Chrome Extension Background Service Worker
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('MViewer Extension installed successfully.');
+  console.log('MDViewer Extension installed successfully.');
 });
 
 // Handle messages from popup

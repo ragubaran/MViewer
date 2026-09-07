@@ -1,13 +1,15 @@
-# MViewer 📄⚡
+# MDViewer 📄⚡
+
+**Release v0.1.0** · [CHANGELOG](CHANGELOG.md) · [Help & FAQ](HELP.md)
 
 > **Tamper-Proof Markdown Form Viewer & Editor**
 > *Replace traditional, bulky PDF forms with lightweight, cryptographically sealed, and LLM-optimized Markdown documents.*
 
 ---
 
-## 💡 The Core Problem MViewer Solves
+## 💡 The Core Problem MDViewer Solves
 
-| Challenge | Traditional Fillable PDF Forms | **MViewer Markdown Forms (`.form.md`)** |
+| Challenge | Traditional Fillable PDF Forms | **MDViewer Markdown Forms (`.form.md`)** |
 | :--- | :--- | :--- |
 | **File Format** | Opaque binary blob (500 KB – 5 MB) | Clean, human-readable text (5 KB – 25 KB) |
 | **Tamper Protection** | Complex X.509 Adobe PKI certificates | **Cryptographic SHA-256 Checksum** in YAML frontmatter |
@@ -19,7 +21,7 @@
 
 ## ✨ Features
 
-- 🛡️ **Tamper-Proof Template Integrity**: The template body (clauses, instructions, questions) is cryptographically signed with a SHA-256 hash. If anyone attempts to modify a single word of the legal terms in an external text editor (like VS Code or Notepad), MViewer immediately flags the document with a **`CRITICAL INTEGRITY VIOLATION: TAMPER DETECTED`** alert.
+- 🛡️ **Tamper-Proof Template Integrity**: The template body (clauses, instructions, questions) is cryptographically signed with a SHA-256 hash. If anyone attempts to modify a single word of the legal terms in an external text editor (like VS Code or Notepad), MDViewer immediately flags the document with a **`CRITICAL INTEGRITY VIOLATION: TAMPER DETECTED`** alert.
 - 📋 **Fillable PDF Experience**: Interactive form fields embedded directly in Markdown text flow:
   - Short Text, Email, Phone, Website URL, Number, Currency (`$`)
   - Long Text / Textarea
@@ -58,7 +60,7 @@
 ### Installation
 ```bash
 # Clone or navigate to the repository
-cd /Users/ragu/Code/MViewer
+cd /Users/ragu/Code/MDViewer
 
 # Install dependencies (blazing fast with Bun)
 bun install
@@ -83,8 +85,10 @@ bun run build:extension
 1. Open Chrome and go to `chrome://extensions`
 2. Enable **Developer mode** (toggle in the top-right corner)
 3. Click **Load unpacked**
-4. Select the directory: `/Users/ragu/Code/MViewer/extension/dist`
-5. Click the MViewer icon in your extensions toolbar to open the quick popup, side panel, or full workspace!
+4. Select the directory: `/Users/ragu/Code/MDViewer/extension/dist`
+5. Click the MDViewer icon in your extensions toolbar to open the quick popup, side panel, or full workspace!
+
+`bun run build:extension` also packages a signed, distributable `extension/dist/mdviewer.crx` (needs Google Chrome installed). The first run generates `extension/mdviewer.pem` — a private signing key, gitignored — keep it so every future build re-signs with the same extension ID.
 
 ### 4. Running Unit Tests
 ```bash
@@ -101,7 +105,7 @@ bun run build
 
 ## 📝 Document Format Specification
 
-MViewer documents are standard Markdown files with YAML frontmatter:
+MDViewer documents are standard Markdown files with YAML frontmatter:
 
 ```markdown
 ---
@@ -147,3 +151,9 @@ form_data:
 1. **Canonicalization**: Line breaks are normalized to `\n` and trailing line spaces are trimmed to prevent false positives across different operating systems.
 2. **SHA-256 Digest**: The template markdown content is hashed using standard SHA-256.
 3. **Immutability**: Form responses are stored strictly in `form_data`. When saved, the template body is preserved verbatim, ensuring the hash remains 100% valid. Any modification to text outside `form_data` invalidates the signature.
+
+---
+
+## 📜 License
+
+Licensed under the [GNU Affero General Public License v3.0](LICENSE) — covers the web app, the desktop build, and the Chrome extension. If you run a modified version as a network service, you must make that modified source available to its users.

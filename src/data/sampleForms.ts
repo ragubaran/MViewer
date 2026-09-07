@@ -222,7 +222,7 @@ template_id: "${key}-v1"
 version: "1.0.0"
 template_checksum: "${checksum}"
 status: "template"
-author: "DocuMark / MViewer Systems"
+author: "DocuMark / MDViewer Systems"
 created_at: "2026-09-04"
 form_data: {}
 ---

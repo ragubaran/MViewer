@@ -111,7 +111,7 @@ export const SecurityModal: React.FC<SecurityModalProps> = ({
 
           {/* How It Works Explanation */}
           <div className="p-4 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-400 space-y-2">
-            <span className="font-semibold text-slate-200 block">How MViewer Protects Markdown Forms:</span>
+            <span className="font-semibold text-slate-200 block">How MDViewer Protects Markdown Forms:</span>
             <ul className="list-disc list-inside space-y-1">
               <li>The Markdown template (contract terms, instructions, questions) is hashed using SHA-256.</li>
               <li>When end-users fill out the form, their answers are stored strictly in the <code className="text-indigo-400">form_data</code> frontmatter.</li>
@@ -125,7 +125,7 @@ export const SecurityModal: React.FC<SecurityModalProps> = ({
             <div>
               <span className="text-xs font-semibold text-white block">Tamper Test Simulation</span>
               <span className="text-[11px] text-slate-400">
-                Modify 1 character of legal text to verify that MViewer flags it immediately.
+                Modify 1 character of legal text to verify that MDViewer flags it immediately.
               </span>
             </div>
             <div className="flex gap-2">

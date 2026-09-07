@@ -23,6 +23,7 @@ import {
   Mail,
   Phone,
   Paperclip,
+  ToggleLeft,
 } from 'lucide-react';
 
 interface VisualFormBuilderProps {
@@ -72,7 +73,7 @@ export const VisualFormBuilder: React.FC<VisualFormBuilderProps> = ({
     const cloned: VisualBlock = JSON.parse(JSON.stringify(target));
     cloned.id = `${cloned.type}-${Math.random().toString(36).slice(2, 7)}`;
     if (cloned.field) {
-      cloned.field.id = `${cloned.field.id}_copy`;
+      cloned.field.id = `${cloned.field.id}_copy_${Math.random().toString(36).slice(2, 5)}`;
       cloned.field.label = `${cloned.field.label || 'Question'} (Copy)`;
     }
     const next = [...blocks.slice(0, index + 1), cloned, ...blocks.slice(index + 1)];
@@ -131,6 +132,19 @@ export const VisualFormBuilder: React.FC<VisualFormBuilderProps> = ({
       {
         id: `divider-${Math.random().toString(36).slice(2, 7)}`,
         type: 'divider',
+      },
+    ];
+    onChangeBlocks(next);
+  };
+
+  const handleAddYesNo = () => {
+    const suffix = Math.random().toString(36).slice(2, 7);
+    const next: VisualBlock[] = [
+      ...blocks,
+      {
+        id: `field-yesno_${suffix}-${suffix}`,
+        type: 'field',
+        field: { id: `yesno_${suffix}`, type: 'yesno', label: 'Do you agree?' },
       },
     ];
     onChangeBlocks(next);
@@ -382,6 +396,31 @@ export const VisualFormBuilder: React.FC<VisualFormBuilderProps> = ({
                     </div>
                   )}
 
+                  {/* Display style (choice only): chips, checkboxes, or radio buttons */}
+                  {block.field.type === 'choice' && (
+                    <div>
+                      <label className="block text-[11px] font-medium text-slate-400 mb-1">
+                        Display As
+                      </label>
+                      <div className="flex bg-slate-950 p-0.5 rounded-lg border border-slate-700 w-fit">
+                        {(['chips', 'checkbox', 'radio'] as const).map((s) => (
+                          <button
+                            key={s}
+                            type="button"
+                            onClick={() => handleUpdateField(idx, { style: s })}
+                            className={`px-2.5 py-1 text-[11px] font-medium rounded-md cursor-pointer transition-colors ${
+                              (block.field!.style || 'chips') === s
+                                ? 'bg-blue-600 text-white'
+                                : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            {s === 'chips' ? 'Chips' : s === 'checkbox' ? 'Checkboxes' : 'Radio'}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Attributes Bar: Required, Placeholder */}
                   <div className="flex flex-wrap items-center justify-between pt-1 gap-2">
                     <div className="flex items-center gap-4">
@@ -459,6 +498,16 @@ export const VisualFormBuilder: React.FC<VisualFormBuilderProps> = ({
         >
           <Minus className="w-3.5 h-3.5 mr-1" />
           + Add Divider
+        </Button>
+
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={handleAddYesNo}
+          className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300"
+        >
+          <ToggleLeft className="w-3.5 h-3.5 mr-1" />
+          + Add Yes/No Toggle
         </Button>
       </div>
     </div>

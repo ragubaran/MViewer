@@ -33,6 +33,8 @@ interface ToolbarProps {
   onOpenFile: () => void;
   onSaveFile: () => void;
   onPrintPdf: () => void;
+  printMarginMm: number;
+  onPrintMarginChange: (mm: number) => void;
   onResetFields: () => void;
   onSelectSampleTemplate: (key: string) => void;
 }
@@ -52,6 +54,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onOpenFile,
   onSaveFile,
   onPrintPdf,
+  printMarginMm,
+  onPrintMarginChange,
   onResetFields,
   onSelectSampleTemplate,
 }) => {
@@ -68,9 +72,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             <MvLogo size={34} className="shrink-0 shadow-md shadow-blue-500/25 rounded-xl transition-transform hover:scale-105" />
             <div className="flex flex-col">
               <span className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5">
-                MViewer
+                MDViewer
                 <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 font-mono font-normal">
-                  v1.4
+                  v0.1.0
                 </span>
               </span>
               <span className="text-[11px] text-slate-400 truncate max-w-[200px]">
@@ -236,6 +240,25 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             <Save className="w-3.5 h-3.5 mr-1" />
             <span className="hidden sm:inline">Save</span>
           </Button>
+
+          {/* PDF Page Margin */}
+          <div className="hidden lg:flex items-center bg-slate-900 rounded-md border border-slate-800 p-0.5" title="Page margin used when printing / exporting to PDF">
+            <button
+              onClick={() => onPrintMarginChange(Math.max(10, printMarginMm - 5))}
+              className="p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 cursor-pointer"
+              title="Decrease PDF margin"
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+            <span className="text-[11px] font-mono px-1.5 text-slate-300">{printMarginMm}mm</span>
+            <button
+              onClick={() => onPrintMarginChange(Math.min(60, printMarginMm + 5))}
+              className="p-1 text-slate-400 hover:text-white rounded hover:bg-slate-800 cursor-pointer"
+              title="Increase PDF margin"
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
+          </div>
 
           {/* Print / PDF Export */}
           <Button variant="outline" size="sm" onClick={onPrintPdf} title="Print or save as PDF">

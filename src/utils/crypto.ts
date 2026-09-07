@@ -85,6 +85,6 @@ export async function verifyTemplateChecksum(
     isValid: false,
     computedHash,
     expectedHash: expectedChecksum,
-    message: 'SECURITY ALERT: Template text has been modified outside MViewer! Checksum mismatch detected.',
+    message: 'SECURITY ALERT: Template text has been modified outside MDViewer! Checksum mismatch detected.',
   };
 }

@@ -10,6 +10,7 @@ interface PdfPaperViewerProps {
   highlightFields: boolean;
   zoom: number;
   onOpenSecurityModal: () => void;
+  printMarginMm?: number;
 }
 
 export const PdfPaperViewer: React.FC<PdfPaperViewerProps> = ({
@@ -18,6 +19,7 @@ export const PdfPaperViewer: React.FC<PdfPaperViewerProps> = ({
   highlightFields,
   zoom,
   onOpenSecurityModal,
+  printMarginMm = 50,
 }) => {
   // Calculate completion progress
   const progress = useMemo(() => {
@@ -176,12 +178,13 @@ export const PdfPaperViewer: React.FC<PdfPaperViewerProps> = ({
           className={`pdf-sheet w-[820px] min-h-[1120px] bg-white rounded-sm shadow-2xl p-12 relative flex flex-col border border-slate-200/80 ${
             highlightFields ? 'highlight-fields' : ''
           }`}
+          style={{ '--pdf-print-margin': `${printMarginMm}mm` } as React.CSSProperties}
         >
           {/* Top PDF Sheet Header & Verification Seal */}
           <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-200 text-xs text-slate-500">
             <div className="flex items-center gap-2">
               <span className="font-bold tracking-wider text-slate-700 uppercase text-[11px]">
-                MVIEWER DOCUMENT
+                MDVIEWER DOCUMENT
               </span>
               <span className="text-slate-300">|</span>
               <span className="font-mono text-[10px] text-slate-500">
@@ -218,7 +221,7 @@ export const PdfPaperViewer: React.FC<PdfPaperViewerProps> = ({
               <div>
                 <strong className="font-bold">CRITICAL INTEGRITY VIOLATION:</strong>
                 <p className="mt-0.5 text-rose-800 leading-snug">
-                  This document's static template content, legal clauses, or questions have been altered outside of MViewer.
+                  This document's static template content, legal clauses, or questions have been altered outside of MDViewer.
                   The embedded cryptographic SHA-256 seal failed validation. Data entered in this form cannot be certified.
                 </p>
               </div>
@@ -258,7 +261,7 @@ export const PdfPaperViewer: React.FC<PdfPaperViewerProps> = ({
           {/* PDF Page Footer */}
           <div className="pt-8 mt-12 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-400">
             <div className="flex items-center gap-2">
-              <span>MViewer Secure Form v1.0</span>
+              <span>MDViewer Secure Form v0.1.0</span>
               <span>•</span>
               <span className="font-mono">
                 Checksum: {doc.metadata.template_checksum ? doc.metadata.template_checksum.substring(0, 18) + '...' : 'Unsealed'}

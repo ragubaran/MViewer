@@ -178,7 +178,7 @@ export const LlmExtractionModal: React.FC<LlmExtractionModalProps> = ({
                   <thead className="bg-slate-950/60 text-slate-400 border-b border-slate-800">
                     <tr>
                       <th className="p-3">Attribute</th>
-                      <th className="p-3 text-emerald-400 font-semibold">MViewer (.md AcroForm)</th>
+                      <th className="p-3 text-emerald-400 font-semibold">MDViewer (.md AcroForm)</th>
                       <th className="p-3 text-slate-400">Traditional PDF (AcroForm)</th>
                     </tr>
                   </thead>

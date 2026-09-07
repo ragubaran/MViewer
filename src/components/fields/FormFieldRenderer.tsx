@@ -132,6 +132,50 @@ export const FormFieldRenderer: React.FC<FormFieldRendererProps> = ({
       }
     };
 
+    // Checkbox / Radio list style: native inputs in a vertical stack
+    if (field.style === 'checkbox' || field.style === 'radio') {
+      const useCheckbox = field.style === 'checkbox' || isMultiple;
+
+      return (
+        <div className="flex flex-col my-2 w-full">
+          {field.label && (
+            <label className="text-xs font-semibold text-slate-700 mb-1.5 flex items-center gap-1">
+              {field.label}
+              {field.required && <span className="text-rose-500">*</span>}
+              {isMultiple && <span className="text-[11px] text-slate-500 font-normal">(Select all that apply)</span>}
+            </label>
+          )}
+          <div className="flex flex-col gap-1.5">
+            {options.map((opt) => {
+              const isSelected = selectedList.includes(opt);
+              return (
+                <label
+                  key={opt}
+                  className={`pdf-field-box flex items-center gap-2 px-2.5 py-1.5 rounded-lg border text-xs cursor-pointer select-none transition-colors ${
+                    isSelected
+                      ? 'bg-blue-50 border-blue-300 text-slate-900'
+                      : highlight
+                      ? 'bg-blue-50/50 border-blue-200 text-slate-700'
+                      : 'bg-slate-50 border-slate-300 text-slate-700 hover:bg-slate-100'
+                  }`}
+                >
+                  <input
+                    type={useCheckbox ? 'checkbox' : 'radio'}
+                    name={field.id}
+                    checked={isSelected}
+                    onChange={() => handleToggle(opt)}
+                    className="w-3.5 h-3.5 accent-blue-600 cursor-pointer"
+                  />
+                  <span>{opt}</span>
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      );
+    }
+
+    // Default: interactive chip buttons
     return (
       <div className="flex flex-col my-2 w-full">
         {field.label && (
