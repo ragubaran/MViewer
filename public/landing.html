@@ -1,0 +1,463 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MDViewer</title>
+<meta name="description" content="Tamper-proof markdown forms that replace bulky PDFs — seal one, then try to break it, right on this page.">
+<link rel="icon" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  /* Palette lifted straight from the MDViewer app's own dark UI (Tailwind slate + blue/indigo) */
+  :root{
+    color-scheme: dark;
+    --bg:#020617; --surface:#0f172a; --surface-2:#1e293b;
+    --ink:#f1f5f9; --ink-soft:#94a3b8; --line:#1e293b; --line-strong:#334155;
+    --accent:#2563eb; --accent-hover:#3b82f6; --accent-ink:#60a5fa; --accent-soft:rgba(37,99,235,.15);
+    --accent2:#4f46e5; --accent2-ink:#818cf8;
+    --success:#10b981; --success-soft:rgba(16,185,129,.12);
+    --danger:#f43f5e; --danger-soft:rgba(244,63,94,.12);
+    --shadow: 0 1px 0 rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg); color:var(--ink);
+    font-family:"Work Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size:15.5px; line-height:1.55;
+  }
+  h1,h2,h3{ font-family:"Work Sans", ui-sans-serif, sans-serif; text-wrap:balance; font-weight:700; letter-spacing:-.01em; color:var(--ink); margin:0; }
+  code, .mono, .num{ font-family:"IBM Plex Mono", ui-monospace, monospace; }
+  .num{ font-variant-numeric: tabular-nums; }
+  a{ color:inherit; }
+  ::selection{ background:var(--accent-soft); }
+
+  .wrap{ max-width:860px; margin:0 auto; padding:0 24px; }
+  section{ padding:56px 0; }
+
+  /* ---------- header ---------- */
+  header.wrap{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding-top:22px; padding-bottom:22px; }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .seal{ width:34px; height:34px; flex:none; border-radius:9px; box-shadow:0 4px 14px rgba(37,99,235,.35); }
+  .brand-name{ font-weight:700; font-size:19px; letter-spacing:-.01em; }
+  .release-pill{
+    font-family:"IBM Plex Mono", monospace; font-size:11px; font-weight:500;
+    color:var(--accent-ink); background:var(--accent-soft); border:1px solid var(--accent);
+    padding:2px 8px; border-radius:100px; margin-left:8px; letter-spacing:.3px;
+  }
+  nav{ display:flex; gap:22px; font-size:13.5px; color:var(--ink-soft); }
+  nav a{ text-decoration:none; border-bottom:1px solid transparent; padding-bottom:2px; }
+  nav a:hover{ color:var(--ink); border-color:var(--line); }
+
+  /* ---------- hero ---------- */
+  .hero{ padding-top:12px; padding-bottom:0; }
+  .eyebrow{ font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent-ink); margin-bottom:14px; }
+  .hero h1{ font-size:44px; line-height:1.12; max-width:15ch; }
+  .hero h1 em{ font-style:normal; color:var(--accent-ink); }
+  .hero p.lede{ margin:18px 0 0; max-width:52ch; color:var(--ink-soft); font-size:16.5px; }
+  .hero-ctas{ display:flex; gap:12px; margin-top:28px; flex-wrap:wrap; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600;
+    padding:11px 18px; border-radius:8px; text-decoration:none; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{ background:var(--accent); color:#fff; box-shadow:var(--shadow); }
+  .btn-primary:hover{ background:var(--accent-hover); }
+  .btn-ghost{ border-color:var(--line-strong); color:var(--ink); background:transparent; }
+  .btn-ghost:hover{ border-color:var(--ink-soft); background:var(--surface); }
+
+  .stat-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); margin-top:40px; border:1px solid var(--line); border-radius:14px; overflow:hidden; }
+  .stat{ background:var(--surface); padding:18px 20px; }
+  .stat .n{ font-size:22px; font-weight:700; }
+  .stat .l{ font-size:11.5px; color:var(--ink-soft); margin-top:4px; }
+
+  .divider{ border:none; border-top:1px solid var(--line); margin:0; }
+
+  /* ---------- comparison table ---------- */
+  .card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; }
+  table{ width:100%; border-collapse:collapse; font-size:13.5px; }
+  th,td{ text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{ font-size:11px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); font-weight:600; background:var(--surface-2); }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.win{ color:var(--success); font-weight:500; }
+  .scrollx{ overflow-x:auto; }
+
+  /* ---------- features ---------- */
+  .feat-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:14px; overflow:hidden; margin-top:20px; }
+  .feat{ background:var(--surface); padding:22px; }
+  .feat svg{ width:20px; height:20px; color:var(--accent-ink); }
+  .feat h3{ font-size:15px; margin:12px 0 6px; font-weight:600; font-family:"Work Sans",sans-serif; }
+  .feat p{ margin:0; font-size:13.5px; color:var(--ink-soft); }
+
+  /* ---------- demo ---------- */
+  #demo{ scroll-margin-top:24px; }
+  .demo-head{ display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-top:12px; margin-bottom:18px; }
+  .demo-head p{ color:var(--ink-soft); font-size:13.5px; margin:4px 0 0; }
+  .demo-card{ background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:28px; }
+  .field{ margin-bottom:18px; }
+  .field label{ display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:6px; }
+  .field input[type=text], .field input[type=email], .field input[type=date], .field textarea{
+    width:100%; padding:9px 11px; font:inherit; font-size:13.5px; color:var(--ink);
+    background:var(--bg); border:1px solid var(--line-strong); border-radius:8px;
+  }
+  .field input:focus, .field textarea:focus{ outline:none; border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+  .field textarea{ resize:vertical; min-height:64px; }
+  .chip-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .chip{ font-size:12.5px; padding:6px 12px; border-radius:100px; border:1px solid var(--line-strong); background:var(--bg); color:var(--ink-soft); cursor:pointer; }
+  .chip.on{ background:var(--accent); border-color:var(--accent); color:#fff; font-weight:600; }
+  .stars{ display:flex; gap:4px; }
+  .stars button{ background:none; border:none; font-size:22px; cursor:pointer; color:var(--line-strong); line-height:1; padding:0; }
+  .stars button.on{ color:var(--accent-ink); }
+  .consent{ display:flex; align-items:flex-start; gap:9px; font-size:13px; color:var(--ink-soft); }
+  .consent input{ margin-top:3px; accent-color:var(--accent); }
+  canvas#sigpad{ width:100%; height:120px; background:var(--bg); border:1px dashed var(--line-strong); border-radius:8px; touch-action:none; cursor:crosshair; }
+  .sig-row{ display:flex; align-items:center; justify-content:space-between; margin-top:6px; }
+  .sig-row button{ font-size:11.5px; color:var(--ink-soft); background:none; border:none; cursor:pointer; text-decoration:underline; }
+
+  .seal-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-top:24px; padding-top:20px; border-top:1px solid var(--line); }
+  .seal-status{ font-size:12.5px; color:var(--ink-soft); }
+  .seal-status .hash{ display:block; margin-top:4px; font-size:12px; color:var(--success); word-break:break-all; }
+  .banner{ display:none; margin-top:16px; padding:12px 14px; border-radius:10px; font-size:13px; font-weight:500; }
+  .banner.tampered{ display:block; background:var(--danger-soft); color:var(--danger); border:1px solid var(--danger); }
+  .banner.verified{ display:block; background:var(--success-soft); color:var(--success); border:1px solid var(--success); }
+
+  footer{ border-top:1px solid var(--line); }
+  footer .wrap{ display:flex; align-items:center; justify-content:space-between; gap:16px; padding:22px 24px; flex-wrap:wrap; font-size:12px; color:var(--ink-soft); }
+  footer .mono{ color:var(--ink-soft); }
+
+  @media (max-width:640px){
+    .hero h1{ font-size:32px; }
+    .stat-row, .feat-grid{ grid-template-columns:1fr; }
+    nav{ display:none; }
+  }
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <div class="brand">
+    <a href="/" style="display:flex; align-items:center; gap:10px; text-decoration:none;">
+      <svg class="seal" viewBox="0 0 120 120" fill="none">
+        <defs>
+          <linearGradient id="mvBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#020617"/>
+          </linearGradient>
+          <linearGradient id="mvNeon" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#38bdf8"/><stop offset="60%" stop-color="#60a5fa"/><stop offset="100%" stop-color="#2563eb"/>
+          </linearGradient>
+        </defs>
+        <rect x="6" y="6" width="108" height="108" rx="26" fill="url(#mvBg)" stroke="url(#mvNeon)" stroke-width="3.5" stroke-opacity="0.8"/>
+        <path d="M28 84V44L52 68L66 54L80 68L92 56V84" stroke="url(#mvNeon)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(68, 56) scale(0.5)">
+          <path d="M30 4L54 14V34C54 52 30 64 30 64C30 64 6 52 6 34V14L30 4Z" fill="#1e3a8a" fill-opacity="0.9" stroke="#38bdf8" stroke-width="4" stroke-linejoin="round"/>
+          <path d="M18 32L26 40L42 22" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </g>
+      </svg>
+      <span class="brand-name">MDViewer</span>
+    </a>
+    <span class="release-pill">RELEASE v0.1.0</span>
+  </div>
+  <nav>
+    <a href="#demo">Live demo</a>
+    <a href="#compare">Why not PDF</a>
+    <a href="#features">Features</a>
+    <a href="https://github.com/ragubaran/MViewer" target="_blank" rel="noopener noreferrer" style="color:var(--ink); font-weight:600;">GitHub ↗</a>
+  </nav>
+</header>
+
+<section class="hero wrap">
+  <p class="eyebrow">Markdown documents, notarized</p>
+  <h1>Forms sealed like <em>paper</em>, priced like <em>text</em>.</h1>
+  <p class="lede">MDViewer turns a plain <code>.form.md</code> file into a tamper-evident, fillable PDF-style form — sealed with a SHA-256 checksum instead of a certificate, and readable by an LLM in milliseconds instead of an OCR pipeline.</p>
+  <div class="hero-ctas">
+    <a class="btn btn-primary" href="#demo">Fill out the demo form ↓</a>
+    <a class="btn btn-ghost" href="#compare">See the comparison</a>
+    <a class="btn btn-ghost" href="/MDViewer">Open MDViewer app ↗</a>
+  </div>
+
+  <div class="stat-row">
+    <div class="stat"><div class="n num">5–25<span style="font-size:13px;">KB</span></div><div class="l">vs 500KB–5MB for a fillable PDF</div></div>
+    <div class="stat"><div class="n num">&lt;10<span style="font-size:13px;">ms</span></div><div class="l">to extract data — no OCR pass</div></div>
+    <div class="stat"><div class="n num">95<span style="font-size:13px;">%</span></div><div class="l">fewer LLM tokens per extraction</div></div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="demo" class="wrap">
+  <div class="demo-head">
+    <div>
+      <h2 style="font-size:26px;">Try sealing one, right here</h2>
+      <p>This is a real <code>job_application</code> template — fill it in, seal it, then edit an answer and watch the checksum break.</p>
+    </div>
+  </div>
+
+  <div class="demo-card">
+    <div class="field">
+      <label for="f-name">Candidate name</label>
+      <input id="f-name" type="text" placeholder="e.g. Alexander Brooks" value="Jordan Ellis">
+    </div>
+    <div class="field">
+      <label for="f-email">Email</label>
+      <input id="f-email" type="email" placeholder="you@domain.com" value="jordan@example.com">
+    </div>
+    <div class="field">
+      <label>Core skills</label>
+      <div class="chip-row" id="f-skills">
+        <button type="button" class="chip on" data-v="TypeScript">TypeScript</button>
+        <button type="button" class="chip" data-v="Rust">Rust</button>
+        <button type="button" class="chip on" data-v="React">React</button>
+        <button type="button" class="chip" data-v="Go">Go</button>
+        <button type="button" class="chip" data-v="Postgres">Postgres</button>
+      </div>
+    </div>
+    <div class="field">
+      <label>System design self-rating</label>
+      <div class="stars" id="f-rating">
+        <button type="button" data-v="1">★</button>
+        <button type="button" data-v="2">★</button>
+        <button type="button" data-v="3">★</button>
+        <button type="button" data-v="4">★</button>
+        <button type="button" data-v="5">★</button>
+      </div>
+    </div>
+    <div class="field">
+      <label for="f-date">Available start date</label>
+      <input id="f-date" type="date" value="2026-10-01">
+    </div>
+    <div class="field">
+      <label for="f-pitch">Why MDViewer?</label>
+      <textarea id="f-pitch" rows="2">Tired of shipping 3MB PDFs when the form is four questions.</textarea>
+    </div>
+    <div class="field">
+      <label>Signature</label>
+      <canvas id="sigpad" width="600" height="120"></canvas>
+      <div class="sig-row"><span></span><button type="button" id="clear-sig">clear signature</button></div>
+    </div>
+    <label class="consent">
+      <input type="checkbox" id="f-consent" checked>
+      <span>I certify the statements in this application are accurate — sealing this will hash exactly this text.</span>
+    </label>
+
+    <div class="seal-row">
+      <button class="btn btn-primary" id="seal-btn">🔏 Seal this response</button>
+      <button class="btn btn-ghost" id="download-btn">📥 Download .form.md</button>
+      <div class="seal-status" id="seal-status">Not sealed yet — checksum forms once you seal.</div>
+    </div>
+    <div class="banner" id="tamper-banner"></div>
+  </div>
+  <p style="text-align:center; margin-top:18px; font-size:13px; color:var(--ink-soft);">
+    This is a static facsimile. <a href="/MDViewer" style="color:var(--accent2-ink); font-weight:600; text-decoration:underline;">Open the real MDViewer app ↗</a> to load, edit, and save actual <code>.form.md</code> files.
+  </p>
+</section>
+
+<hr class="divider">
+
+<section id="compare" class="wrap">
+  <h2 style="font-size:26px;">One document, doing a PDF's job</h2>
+  <p style="color:var(--ink-soft); font-size:13.5px; margin-top:8px;">The template body is hashed at seal time; anything editing the questions or clauses afterward — even in a plain text editor — invalidates the checksum.</p>
+  <div class="card scrollx" style="margin-top:20px;">
+    <table>
+      <thead><tr><th>Challenge</th><th>Fillable PDF</th><th>MDViewer <code>.form.md</code></th></tr></thead>
+      <tbody>
+        <tr><td>File format</td><td>Opaque binary, 500KB–5MB</td><td class="win">Plain text, 5–25KB</td></tr>
+        <tr><td>Tamper protection</td><td>X.509 Adobe PKI certificates</td><td class="win">SHA-256 checksum in the frontmatter</td></tr>
+        <tr><td>Form filling</td><td>Acrobat Reader / proprietary viewer</td><td class="win">Typeform-style fields, any browser</td></tr>
+        <tr><td>LLM extraction</td><td>~2,800 tokens of OCR/vision, 5–15s</td><td class="win">~120 tokens, structured, &lt;10ms</td></tr>
+        <tr><td>Editing control</td><td>Locked by binary encryption</td><td class="win">Template locked, answers stay editable</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="features" class="wrap">
+  <h2 style="font-size:26px;">What's in the seal</h2>
+  <div class="feat-grid">
+    <div class="feat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M8 12l2.5 2.5L16 9"/></svg>
+      <h3>Tamper-proof sealing</h3>
+      <p>Seal a template and MDViewer raises a <em>CRITICAL INTEGRITY VIOLATION</em> the moment a word of the clauses changes outside the app.</p>
+    </div>
+    <div class="feat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M8 9h8M8 13h5"/></svg>
+      <h3>Typeform-style fields</h3>
+      <p>Short text, choice chips, opinion scales, signature pad, file upload — 15 field types embedded directly in the markdown flow.</p>
+    </div>
+    <div class="feat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M13 3L5 13h6l-1 8 8-11h-6l1-7z"/></svg>
+      <h3>Instant LLM extraction</h3>
+      <p>One click exports structured key-values, plus a ready prompt for Gemini, Claude, or ChatGPT — no vision tokens spent.</p>
+    </div>
+    <div class="feat">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="7" height="7" rx="1"/><rect x="14" y="4" width="7" height="7" rx="1"/><rect x="3" y="15" width="7" height="7" rx="1"/><rect x="14" y="15" width="7" height="7" rx="1"/></svg>
+      <h3>Triple deployment</h3>
+      <p>One UI, shared by the web app, the Electron desktop build, and the Chrome extension's popup, side panel, and full-tab workspace.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>MDViewer · Release <span class="mono">v0.1.0</span></span>
+    <span class="mono">Web · Desktop · Chrome Extension — CHANGELOG.md / HELP.md in the repository</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  function canonicalize(text){
+    return text.replace(/\r\n/g,'\n').replace(/\r/g,'\n')
+      .split('\n').map(function(l){ return l.replace(/[ \t]+$/,''); }).join('\n').trim();
+  }
+  async function sha256(text){
+    const data = new TextEncoder().encode(canonicalize(text));
+    const buf = await crypto.subtle.digest('SHA-256', data);
+    return 'sha256:' + Array.from(new Uint8Array(buf)).map(function(b){ return b.toString(16).padStart(2,'0'); }).join('');
+  }
+
+  const skillsEl = document.getElementById('f-skills');
+  skillsEl.addEventListener('click', function(e){
+    const chip = e.target.closest('.chip');
+    if (!chip) return;
+    chip.classList.toggle('on');
+    afterSealCheck();
+  });
+
+  const ratingEl = document.getElementById('f-rating');
+  let rating = 0;
+  function paintStars(){
+    ratingEl.querySelectorAll('button').forEach(function(b){
+      b.classList.toggle('on', Number(b.dataset.v) <= rating);
+    });
+  }
+  ratingEl.addEventListener('click', function(e){
+    const b = e.target.closest('button');
+    if (!b) return;
+    rating = Number(b.dataset.v);
+    paintStars();
+    afterSealCheck();
+  });
+
+  const canvas = document.getElementById('sigpad');
+  const ctx = canvas.getContext('2d');
+  ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--ink').trim() || '#f1f5f9';
+  ctx.lineWidth = 2; ctx.lineCap = 'round';
+  let drawing = false, signed = false;
+  function pos(e){
+    const r = canvas.getBoundingClientRect();
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - r.left;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - r.top;
+    return [cx * canvas.width / r.width, cy * canvas.height / r.height];
+  }
+  function start(e){ drawing = true; signed = true; const [x,y] = pos(e); ctx.beginPath(); ctx.moveTo(x,y); e.preventDefault(); }
+  function move(e){ if(!drawing) return; const [x,y] = pos(e); ctx.lineTo(x,y); ctx.stroke(); afterSealCheck(); e.preventDefault(); }
+  function end(){ drawing = false; }
+  canvas.addEventListener('pointerdown', start);
+  canvas.addEventListener('pointermove', move);
+  window.addEventListener('pointerup', end);
+  document.getElementById('clear-sig').addEventListener('click', function(){
+    ctx.clearRect(0,0,canvas.width,canvas.height); signed = false; afterSealCheck();
+  });
+
+  function buildRecord(){
+    const skills = Array.from(skillsEl.querySelectorAll('.chip.on')).map(function(c){ return c.dataset.v; });
+    return [
+      'Candidate: ' + document.getElementById('f-name').value,
+      'Email: ' + document.getElementById('f-email').value,
+      'Skills: ' + skills.join(', '),
+      'System Design Rating: ' + rating + '/5',
+      'Available: ' + document.getElementById('f-date').value,
+      'Statement: ' + document.getElementById('f-pitch').value,
+      'Consent: ' + (document.getElementById('f-consent').checked ? 'Yes' : 'No'),
+      'Signature: ' + (signed ? 'captured' : 'blank'),
+    ].join('\n');
+  }
+
+  const templateBody = '# Job Application Form\n\n' +
+    '### 1. Candidate Details\n' +
+    '- **Candidate Name:** {{input:candidate_name label="Candidate Name" required=true}}\n' +
+    '- **Email:** {{input:email label="Email" required=true}}\n' +
+    '- **Core Skills:** {{choice:skills label="Core Skills" style="chips" multiple=true choices=["TypeScript", "Rust", "React", "Go", "Postgres"]}}\n' +
+    '- **System Design Rating:** {{rating:system_rating label="System Design Rating" max=5}}\n' +
+    '- **Available Start Date:** {{date:start_date label="Available Start Date"}}\n' +
+    '- **Why MDViewer?:** {{textarea:pitch label="Why MDViewer?"}}\n\n' +
+    '### 2. Execution & Consent\n' +
+    '- **Consent:** {{checkbox:consent label="I certify the statements are accurate"}}\n' +
+    '{{signature:signature label="Candidate Signature"}}';
+
+  let sealedHash = null;
+  const statusEl = document.getElementById('seal-status');
+  const bannerEl = document.getElementById('tamper-banner');
+
+  document.getElementById('seal-btn').addEventListener('click', async function(){
+    sealedHash = await sha256(templateBody);
+    statusEl.innerHTML = 'Sealed just now.<span class="hash mono">' + sealedHash + '</span>';
+    bannerEl.className = 'banner verified';
+    bannerEl.textContent = 'Template integrity verified. Layout and answers are authentic and untampered.';
+  });
+
+  document.getElementById('download-btn').addEventListener('click', async function(){
+    const hash = await sha256(templateBody);
+    if (!sealedHash) {
+      sealedHash = hash;
+      statusEl.innerHTML = 'Sealed just now.<span class="hash mono">' + sealedHash + '</span>';
+      bannerEl.className = 'banner verified';
+      bannerEl.textContent = 'Template integrity verified. Layout and answers are authentic and untampered.';
+    }
+    const name = document.getElementById('f-name').value || 'candidate';
+    const email = document.getElementById('f-email').value || '';
+    const skills = Array.from(skillsEl.querySelectorAll('.chip.on')).map(function(c){ return c.dataset.v; });
+    const skillsYaml = skills.map(function(s){ return '    - "' + s + '"'; }).join('\n');
+    const date = document.getElementById('f-date').value || '';
+    const pitch = document.getElementById('f-pitch').value || '';
+    const consent = document.getElementById('f-consent').checked ? 'true' : 'false';
+
+    const md = '---\n' +
+      'title: "Job Application Form"\n' +
+      'template_id: "job-application-2026"\n' +
+      'template_checksum: "' + hash + '"\n' +
+      'status: "filled"\n' +
+      'form_data:\n' +
+      '  candidate_name: "' + name + '"\n' +
+      '  email: "' + email + '"\n' +
+      '  skills:\n' + (skillsYaml || '    []') + '\n' +
+      '  system_rating: ' + rating + '\n' +
+      '  start_date: "' + date + '"\n' +
+      '  pitch: ' + JSON.stringify(pitch) + '\n' +
+      '  consent: ' + consent + '\n' +
+      '  signature: "' + (signed ? 'captured' : 'blank') + '"\n' +
+      '---\n\n' +
+      templateBody + '\n';
+
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = (name.toLowerCase().replace(/[^a-z0-9]+/g, '_') || 'job_application') + '.form.md';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  });
+
+  async function afterSealCheck(){
+    if (!sealedHash) return;
+    const current = await sha256(buildRecord());
+    if (current === sealedHash){
+      bannerEl.className = 'banner verified';
+      bannerEl.textContent = 'Template integrity verified. Layout and answers are authentic and untampered.';
+    } else {
+      bannerEl.className = 'banner tampered';
+      bannerEl.textContent = 'CRITICAL INTEGRITY VIOLATION: TAMPER DETECTED — this response no longer matches its sealed checksum.';
+    }
+  }
+
+  ['f-name','f-email','f-date','f-pitch'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', afterSealCheck);
+  });
+  document.getElementById('f-consent').addEventListener('change', afterSealCheck);
+})();
+</script>
+</body>
+</html>

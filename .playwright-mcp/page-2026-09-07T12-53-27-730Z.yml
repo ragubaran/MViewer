@@ -1,0 +1,153 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - generic [ref=f3e10]: MDViewer
+      - generic [ref=f3e11]: RELEASE v0.1.0
+    - navigation [ref=f3e12]:
+      - link "Why not PDF" [ref=f3e13] [cursor=pointer]:
+        - /url: "#compare"
+      - link "Features" [ref=f3e14] [cursor=pointer]:
+        - /url: "#features"
+      - link "Live demo" [ref=f3e15] [cursor=pointer]:
+        - /url: "#demo"
+  - generic [ref=f3e16]:
+    - paragraph [ref=f3e17]: Markdown documents, notarized
+    - heading [level=1] [ref=f3e18]:
+      - text: Forms sealed like
+      - emphasis [ref=f3e19]: paper
+      - text: ", priced like"
+      - emphasis [ref=f3e20]: text
+      - text: .
+    - paragraph [ref=f3e21]:
+      - text: MDViewer turns a plain
+      - code [ref=f3e22]: .form.md
+      - text: file into a tamper-evident, fillable PDF-style form â€” sealed with a SHA-256 checksum instead of a certificate, and readable by an LLM in milliseconds instead of an OCR pipeline.
+    - generic [ref=f3e23]:
+      - link "Fill out the demo form â†—" [ref=f3e24] [cursor=pointer]:
+        - /url: "#demo"
+      - link "See the comparison" [ref=f3e25] [cursor=pointer]:
+        - /url: "#compare"
+      - link "Open running app (localhost:5173) â†—" [ref=f3e26] [cursor=pointer]:
+        - /url: http://localhost:5173/
+    - generic [ref=f3e27]:
+      - generic [ref=f3e28]:
+        - generic [ref=f3e29]: 5â€“25KB
+        - generic [ref=f3e30]: vs 500KBâ€“5MB for a fillable PDF
+      - generic [ref=f3e31]:
+        - generic [ref=f3e32]: <10ms
+        - generic [ref=f3e33]: to extract data â€” no OCR pass
+      - generic [ref=f3e34]:
+        - generic [ref=f3e35]: 95%
+        - generic [ref=f3e36]: fewer LLM tokens per extraction
+  - separator [ref=f3e37]
+  - generic [ref=f3e38]:
+    - heading "One document, doing a PDF's job" [level=2] [ref=f3e39]
+    - paragraph [ref=f3e40]: The template body is hashed at seal time; anything editing the questions or clauses afterward â€” even in a plain text editor â€” invalidates the checksum.
+    - table [ref=f3e42]:
+      - rowgroup [ref=f3e43]:
+        - row [ref=f3e44]:
+          - columnheader "Challenge" [ref=f3e45]
+          - columnheader "Fillable PDF" [ref=f3e46]
+          - columnheader [ref=f3e47]:
+            - text: MDViewer
+            - code [ref=f3e48]: .form.md
+      - rowgroup [ref=f3e49]:
+        - row [ref=f3e50]:
+          - cell "File format" [ref=f3e51]
+          - cell "Opaque binary, 500KBâ€“5MB" [ref=f3e52]
+          - cell "Plain text, 5â€“25KB" [ref=f3e53]
+        - row [ref=f3e54]:
+          - cell "Tamper protection" [ref=f3e55]
+          - cell "X.509 Adobe PKI certificates" [ref=f3e56]
+          - cell "SHA-256 checksum in the frontmatter" [ref=f3e57]
+        - row [ref=f3e58]:
+          - cell "Form filling" [ref=f3e59]
+          - cell "Acrobat Reader / proprietary viewer" [ref=f3e60]
+          - cell "Typeform-style fields, any browser" [ref=f3e61]
+        - row [ref=f3e62]:
+          - cell "LLM extraction" [ref=f3e63]
+          - cell "~2,800 tokens of OCR/vision, 5â€“15s" [ref=f3e64]
+          - cell "~120 tokens, structured, <10ms" [ref=f3e65]
+        - row [ref=f3e66]:
+          - cell "Editing control" [ref=f3e67]
+          - cell "Locked by binary encryption" [ref=f3e68]
+          - cell "Template locked, answers stay editable" [ref=f3e69]
+  - generic [ref=f3e70]:
+    - heading "What's in the seal" [level=2] [ref=f3e71]
+    - generic [ref=f3e72]:
+      - generic [ref=f3e73]:
+        - heading "Tamper-proof sealing" [level=3] [ref=f3e77]
+        - paragraph [ref=f3e78]:
+          - text: Seal a template and MDViewer raises a
+          - emphasis [ref=f3e79]: CRITICAL INTEGRITY VIOLATION
+          - text: the moment a word of the clauses changes outside the app.
+      - generic [ref=f3e80]:
+        - heading "Typeform-style fields" [level=3] [ref=f3e84]
+        - paragraph [ref=f3e85]: Short text, choice chips, opinion scales, signature pad, file upload â€” 15 field types embedded directly in the markdown flow.
+      - generic [ref=f3e86]:
+        - heading "Instant LLM extraction" [level=3] [ref=f3e89]
+        - paragraph [ref=f3e90]: One click exports structured key-values, plus a ready prompt for Gemini, Claude, or ChatGPT â€” no vision tokens spent.
+      - generic [ref=f3e91]:
+        - heading "Triple deployment" [level=3] [ref=f3e97]
+        - paragraph [ref=f3e98]: One UI, shared by the web app, the Electron desktop build, and the Chrome extension's popup, side panel, and full-tab workspace.
+  - separator [ref=f3e99]
+  - generic [ref=f3e100]:
+    - generic [ref=f3e102]:
+      - heading "Try sealing one, right here" [level=2] [ref=f3e103]
+      - paragraph [ref=f3e104]:
+        - text: This is a real
+        - code [ref=f3e105]: job_application
+        - text: template â€” fill it in, seal it, then edit an answer and watch the checksum break.
+    - generic [ref=f3e106]:
+      - generic [ref=f3e107]:
+        - generic [ref=f3e108]: Candidate name
+        - textbox "Candidate name" [ref=f3e109]:
+          - /placeholder: e.g. Alexander Brooks
+          - text: Jordan Ellis
+      - generic [ref=f3e110]:
+        - generic [ref=f3e111]: Email
+        - textbox "Email" [ref=f3e112]:
+          - /placeholder: you@domain.com
+          - text: jordan@example.com
+      - generic [ref=f3e113]:
+        - generic [ref=f3e114]: Core skills
+        - generic [ref=f3e115]:
+          - button "TypeScript" [ref=f3e116] [cursor=pointer]
+          - button "Rust" [ref=f3e117] [cursor=pointer]
+          - button "React" [ref=f3e118] [cursor=pointer]
+          - button "Go" [ref=f3e119] [cursor=pointer]
+          - button "Postgres" [ref=f3e120] [cursor=pointer]
+      - generic [ref=f3e121]:
+        - generic [ref=f3e122]: System design self-rating
+        - generic [ref=f3e123]:
+          - button "â˜…" [ref=f3e124] [cursor=pointer]
+          - button "â˜…" [ref=f3e125] [cursor=pointer]
+          - button "â˜…" [ref=f3e126] [cursor=pointer]
+          - button "â˜…" [ref=f3e127] [cursor=pointer]
+          - button "â˜…" [ref=f3e128] [cursor=pointer]
+      - generic [ref=f3e129]:
+        - generic [ref=f3e130]: Available start date
+        - textbox "Available start date" [ref=f3e131]: 2026-10-01
+      - generic [ref=f3e132]:
+        - generic [ref=f3e133]: Why MDViewer?
+        - textbox "Why MDViewer?" [ref=f3e134]: Tired of shipping 3MB PDFs when the form is four questions.
+      - generic [ref=f3e135]:
+        - generic [ref=f3e136]: Signature
+        - button "clear signature" [ref=f3e139] [cursor=pointer]
+      - generic [ref=f3e140]:
+        - checkbox "I certify the statements in this application are accurate â€” sealing this will hash exactly this text." [checked] [ref=f3e141]
+        - generic [ref=f3e142]: I certify the statements in this application are accurate â€” sealing this will hash exactly this text.
+      - generic [ref=f3e143]:
+        - 'button "ðŸ” Seal this response" [ref=f3e144] [cursor=pointer]'
+        - generic [ref=f3e145]: Not sealed yet â€” checksum forms once you seal.
+    - paragraph [ref=f3e146]:
+      - text: This is a static facsimile.
+      - link "Open the real MDViewer app â†—" [ref=f3e147] [cursor=pointer]:
+        - /url: http://localhost:5173/
+      - text: to load, edit, and save actual
+      - code [ref=f3e148]: .form.md
+      - text: files.
+  - contentinfo [ref=f3e149]:
+    - generic [ref=f3e150]:
+      - generic [ref=f3e151]: MDViewer Â· Release v0.1.0
+      - generic [ref=f3e152]: Web Â· Desktop Â· Chrome Extension â€” CHANGELOG.md / HELP.md in the repository

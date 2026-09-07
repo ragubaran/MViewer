@@ -1,0 +1,5 @@
+- generic [active] [ref=e1]:
+  - banner "Artifact controls" [ref=e2]
+  - main [ref=e7]:
+    - generic [ref=e9]:
+      - status "Loading"

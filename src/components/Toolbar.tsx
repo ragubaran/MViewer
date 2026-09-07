@@ -37,6 +37,7 @@ interface ToolbarProps {
   onPrintMarginChange: (mm: number) => void;
   onResetFields: () => void;
   onSelectSampleTemplate: (key: string) => void;
+  onOpenLanding?: () => void;
 }
 
 import { MvLogo } from './MvLogo';
@@ -58,6 +59,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   onPrintMarginChange,
   onResetFields,
   onSelectSampleTemplate,
+  onOpenLanding,
 }) => {
   const isVerified = doc.verification.status === 'verified';
   const isTampered = doc.verification.status === 'tampered';
@@ -68,10 +70,20 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       <div className="h-14 px-4 flex items-center justify-between gap-3">
         {/* Left: Brand & Document Name */}
         <div className="flex items-center gap-3 min-w-0">
-          <div className="flex items-center gap-2.5">
-            <MvLogo size={34} className="shrink-0 shadow-md shadow-blue-500/25 rounded-xl transition-transform hover:scale-105" />
+          <a
+            href="/"
+            onClick={(e) => {
+              if (onOpenLanding) {
+                e.preventDefault();
+                onOpenLanding();
+              }
+            }}
+            title="Open MDViewer Landing Page & Demo"
+            className="flex items-center gap-2.5 group transition-all"
+          >
+            <MvLogo size={34} className="shrink-0 shadow-md shadow-blue-500/25 rounded-xl transition-transform group-hover:scale-105" />
             <div className="flex flex-col">
-              <span className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5">
+              <span className="font-bold text-sm tracking-tight text-white flex items-center gap-1.5 group-hover:text-blue-400 transition-colors">
                 MDViewer
                 <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 font-mono font-normal">
                   v0.1.0
@@ -81,7 +93,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
                 {doc.metadata.title || 'Untitled Form Document'}
               </span>
             </div>
-          </div>
+          </a>
 
           <div className="h-5 w-[1px] bg-slate-800 hidden sm:block" />
 

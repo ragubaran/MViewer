@@ -12,4 +12,5 @@ First tagged release. Ships web, desktop, and Chrome extension builds from one s
 - Printed/exported PDF now defaults to a 50mm page margin, adjustable from the toolbar (10–60mm).
 - `bun run build:extension` now also packages a signed `extension/dist/mdviewer.crx`, reusing `extension/mdviewer.pem` across builds so the extension ID stays stable.
 - Added `LICENSE` (AGPL-3.0) covering the web app, desktop build, and extension.
+- Added `public/landing.html` — a marketing/demo page (live SHA-256 seal + tamper demo) served at `/landing.html`, deployed from the same repo as the app.
 - Fixed: duplicating a field block in the Visual Builder could produce two fields sharing the same `id`, corrupting `form_data`. Duplicate IDs are now randomized.

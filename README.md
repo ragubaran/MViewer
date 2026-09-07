@@ -1,6 +1,6 @@
 # MDViewer 📄⚡
 
-**Release v0.1.0** · [CHANGELOG](CHANGELOG.md) · [Help & FAQ](HELP.md)
+**Release v0.1.0** · [CHANGELOG](CHANGELOG.md) · [Help & FAQ](HELP.md) · [Landing page](public/landing.html)
 
 > **Tamper-Proof Markdown Form Viewer & Editor**
 > *Replace traditional, bulky PDF forms with lightweight, cryptographically sealed, and LLM-optimized Markdown documents.*
@@ -70,7 +70,7 @@ bun install
 ```bash
 bun dev
 ```
-Open [http://localhost:5173](http://localhost:5173) in your browser.
+Open [http://localhost:5173](http://localhost:5173) in your browser. The marketing/demo page lives at `public/landing.html` — served at `/landing.html` alongside the app, so a single Vercel deploy hosts both.
 
 ### 2. Running as a Native Desktop App
 ```bash
@@ -96,9 +96,19 @@ bun test
 ```
 All 15 unit tests run in **~35ms** using Bun's built-in test runner.
 
-### 5. Production Web Build
+### 5. Production Web Build & Vercel Deployment
 ```bash
 bun run build
+```
+
+MDViewer includes a preconfigured [`vercel.json`](file:///Users/ragu/Code/MViewer/vercel.json) for 1-click deployment on [Vercel](https://vercel.com):
+- **Web App (`/`)**: Main interactive MDViewer application built with Vite & React 19.
+- **Landing & Live Seal Demo (`/landing`)**: Interactive marketing page rewrite from `public/landing.html`.
+- **Security Headers**: Includes `X-Content-Type-Options`, `X-Frame-Options`, and `X-XSS-Protection`.
+
+Deploy via Vercel CLI:
+```bash
+npx vercel
 ```
 
 ---

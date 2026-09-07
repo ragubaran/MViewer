@@ -8,9 +8,37 @@ import { PdfPaperViewer } from './components/PdfPaperViewer';
 import { TemplateEditor } from './components/TemplateEditor';
 import { LlmExtractionModal } from './components/LlmExtractionModal';
 import { SecurityModal } from './components/SecurityModal';
+import { LandingPage } from './components/landing/LandingPage';
 import confetti from 'canvas-confetti';
 
 export function App() {
+  const [viewMode, setViewMode] = useState<'app' | 'landing'>(() => {
+    const path = window.location.pathname.toLowerCase();
+    return path.includes('/mdviewer') ? 'app' : 'landing';
+  });
+
+  useEffect(() => {
+    const handlePopState = () => {
+      const path = window.location.pathname.toLowerCase();
+      setViewMode(path.includes('/mdviewer') ? 'app' : 'landing');
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const openApp = useCallback(() => {
+    setViewMode('app');
+    if (window.location.pathname.toLowerCase() !== '/mdviewer') {
+      window.history.pushState({}, '', '/MDViewer');
+    }
+  }, []);
+
+  const openLanding = useCallback(() => {
+    setViewMode('landing');
+    if (window.location.pathname !== '/') {
+      window.history.pushState({}, '', '/');
+    }
+  }, []);
   const [doc, setDoc] = useState<FormDocument | null>(null);
   const [mode, setMode] = useState<'fill' | 'designer'>('fill');
   const [zoom, setZoom] = useState<number>(1.0);
@@ -187,6 +215,10 @@ export function App() {
     );
   }
 
+  if (viewMode === 'landing') {
+    return <LandingPage onOpenApp={openApp} />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-900 text-slate-100 font-sans">
       {/* Toast Notification */}
@@ -214,6 +246,7 @@ export function App() {
         onPrintMarginChange={setPrintMarginMm}
         onResetFields={handleResetFields}
         onSelectSampleTemplate={handleSelectSample}
+        onOpenLanding={openLanding}
       />
 
       {/* Main View Area */}
