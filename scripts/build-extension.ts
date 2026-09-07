@@ -84,25 +84,3 @@ if (chromeBin) {
   console.log('⚠️  Chrome not found on this machine — skipped .crx packaging. Load extension/dist unpacked instead, or install Chrome and re-run.');
 }
 
-// 4. Create a distributable .zip package (ready for Chrome Web Store upload)
-console.log('📦 Creating Chrome Extension ZIP archive...');
-const zipPath = path.join(EXT_DIR, 'mdviewer-extension.zip');
-const distZipPath = path.join(DIST_DIR, 'mdviewer-extension.zip');
-
-if (fs.existsSync(zipPath)) fs.unlinkSync(zipPath);
-if (fs.existsSync(distZipPath)) fs.unlinkSync(distZipPath);
-
-try {
-  execSync(`zip -r "${zipPath}" .`, { cwd: DIST_DIR, stdio: 'inherit' });
-  fs.copyFileSync(zipPath, distZipPath);
-  console.log('✅ Packaged ZIP archive: extension/mdviewer-extension.zip');
-  console.log('✅ Copied ZIP archive: extension/dist/mdviewer-extension.zip');
-} catch (err) {
-  console.log('⚠️ Could not create zip archive via system zip command.');
-}
-
-console.log('👉 To install unpacked in Chrome:');
-console.log('   1. Navigate to chrome://extensions');
-console.log('   2. Enable "Developer mode" (top right toggle)');
-console.log('   3. Click "Load unpacked"');
-console.log('   4. Select the directory: ' + DIST_DIR);
