@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "MDViewer - Tamper-Proof Markdown PDF Form Viewer",
   "version": "0.1.0",
-  "description": "Treat Markdown as secure PDF AcroForms with cryptographic SHA-256 template sealing, Typeform-style interactive fields, and 95% faster LLM data extraction.",
+  "description": "Tamper-proof Markdown form viewer with SHA-256 template sealing, interactive fields, and instant LLM data extraction.",
   "icons": {
     "16": "icons/icon-16.png",
     "48": "icons/icon-48.png",
